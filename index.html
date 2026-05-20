@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayyed Sahil | Cloud Support Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #05070d;
+            --panel: rgba(11, 19, 31, 0.82);
+            --panel-strong: rgba(16, 29, 48, 0.94);
+            --line: rgba(255, 255, 255, 0.13);
+            --text: #f7fbff;
+            --muted: #9db1c7;
+            --cyan: #35e7ff;
+            --green: #64f4ac;
+            --gold: #ffd166;
+            --blue: #6aa8ff;
+            --pink: #ff6ad5;
+            --shadow: rgba(0, 0, 0, 0.42);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 12%, rgba(53, 231, 255, 0.18), transparent 28%),
+                radial-gradient(circle at 82% 6%, rgba(255, 106, 213, 0.13), transparent 24%),
+                radial-gradient(circle at 65% 82%, rgba(100, 244, 172, 0.12), transparent 28%),
+                #05070d;
+            font-family: Inter, "Segoe UI", system-ui, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background-image:
+                linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 86%);
+        }
+
+        #matrixCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.45;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, input, textarea { font: inherit; }
+
+        .shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--line);
+            background: rgba(5, 7, 13, 0.76);
+            backdrop-filter: blur(18px);
+        }
+
+        nav {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            color: #021018;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            box-shadow: 0 0 32px rgba(53, 231, 255, 0.28);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-links a,
+        .btn {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 0 14px;
+            color: var(--muted);
+            background: transparent;
+            font-size: 0.92rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 180ms ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .btn:hover {
+            color: var(--text);
+            border-color: var(--line);
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-1px);
+        }
+
+        .btn.primary {
+            border-color: transparent;
+            color: #021018;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            box-shadow: 0 16px 44px rgba(53, 231, 255, 0.22);
+        }
+
+        .hero {
+            min-height: calc(100vh - 72px);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 420px;
+            gap: 44px;
+            align-items: center;
+            padding: 70px 0 54px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(53, 231, 255, 0.34);
+            border-radius: 999px;
+            padding: 7px 12px;
+            color: #c9fbff;
+            background: rgba(53, 231, 255, 0.08);
+            font-size: 0.82rem;
+            font-weight: 900;
+        }
+
+        h1 {
+            max-width: 780px;
+            font-size: clamp(3.15rem, 7vw, 6.4rem);
+            line-height: 0.94;
+            letter-spacing: 0;
+        }
+
+        .glow-text {
+            display: block;
+            color: transparent;
+            background: linear-gradient(90deg, #fff 0%, #a7f8ff 34%, #b5ffc9 70%, #ffe19a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 24px rgba(53, 231, 255, 0.14));
+        }
+
+        .hero-copy {
+            max-width: 720px;
+            margin: 24px 0 28px;
+            color: var(--muted);
+            font-size: 1.12rem;
+        }
+
+        .hero-actions,
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .profile-stage {
+            perspective: 1100px;
+        }
+
+        .profile-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: linear-gradient(145deg, rgba(17, 31, 52, 0.94), rgba(7, 12, 22, 0.92));
+            box-shadow: 0 34px 90px var(--shadow);
+            transform-style: preserve-3d;
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: rotateY(-7deg) rotateX(3deg) translateY(0); }
+            50% { transform: rotateY(7deg) rotateX(-2deg) translateY(-12px); }
+        }
+
+        .profile-card::before {
+            content: "";
+            position: absolute;
+            inset: -60%;
+            background: conic-gradient(from 120deg, transparent, rgba(53,231,255,.22), transparent, rgba(255,209,102,.16), transparent);
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .profile-inner {
+            position: relative;
+            margin: 1px;
+            border-radius: 13px;
+            padding: 24px;
+            background: rgba(7, 12, 22, 0.9);
+        }
+
+        .photo-frame {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.16);
+            background: #101d30;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .scanline {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, rgba(53,231,255,.18), transparent);
+            height: 38%;
+            animation: scan 3.4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0%, 100% { transform: translateY(-110%); }
+            50% { transform: translateY(210%); }
+        }
+
+        .profile-meta {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .meta-row {
+            display: grid;
+            grid-template-columns: 38px 1fr;
+            gap: 12px;
+            align-items: center;
+            color: var(--muted);
+        }
+
+        .meta-row i {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: var(--cyan);
+            background: rgba(53, 231, 255, 0.09);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .stat {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px;
+            background: rgba(255,255,255,.045);
+        }
+
+        .stat strong {
+            display: block;
+            color: var(--green);
+            font-size: 1.25rem;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .section {
+            padding: 76px 0;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.05;
+            letter-spacing: 0;
+        }
+
+        .section-head p {
+            max-width: 540px;
+            color: var(--muted);
+        }
+
+        .grid { display: grid; gap: 18px; }
+        .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 24px;
+            background: var(--panel);
+            box-shadow: 0 22px 70px rgba(0,0,0,.24);
+            transition: 180ms ease;
+        }
+
+        .panel:hover {
+            border-color: rgba(53, 231, 255, 0.34);
+            transform: translateY(-4px);
+            background: var(--panel-strong);
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 13px;
+            color: var(--gold);
+            font-size: 0.82rem;
+            font-weight: 950;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            margin-bottom: 8px;
+            font-size: 1.25rem;
+        }
+
+        p, li { color: var(--muted); }
+        ul { padding-left: 18px; }
+        li + li { margin-top: 7px; }
+
+        .terminal {
+            overflow: hidden;
+            border: 1px solid rgba(100,244,172,.22);
+            border-radius: 12px;
+            background: #050a0f;
+            box-shadow: 0 30px 100px rgba(0,0,0,.36);
+        }
+
+        .terminal-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            padding: 11px 14px;
+            background: rgba(255,255,255,.045);
+        }
+
+        .dots { display: flex; gap: 7px; }
+        .dots span { width: 11px; height: 11px; border-radius: 50%; }
+        .dots span:nth-child(1) { background: #ff5f56; }
+        .dots span:nth-child(2) { background: #ffbd2e; }
+        .dots span:nth-child(3) { background: #27c93f; }
+
+        .terminal-title {
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 900;
+        }
+
+        .terminal-body {
+            min-height: 310px;
+            padding: 18px;
+            color: #b7ffd8;
+            font-family: "Cascadia Code", Consolas, monospace;
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        .prompt { color: var(--green); }
+        .cmd { color: #e8fbff; }
+        .comment { color: #7f95a8; }
+        .cursor {
+            display: inline-block;
+            width: 9px;
+            height: 1.1em;
+            margin-left: 3px;
+            vertical-align: -2px;
+            background: var(--green);
+            animation: blink 1s steps(2, start) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .skill-layout {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            gap: 18px;
+        }
+
+        .skill-menu {
+            display: grid;
+            gap: 10px;
+        }
+
+        .skill-tab {
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 0 14px;
+            color: var(--text);
+            background: rgba(255,255,255,.045);
+            cursor: pointer;
+            font-weight: 900;
+            text-align: left;
+            transition: 180ms ease;
+        }
+
+        .skill-tab i {
+            width: 30px;
+            color: var(--cyan);
+            text-align: center;
+        }
+
+        .skill-tab:hover,
+        .skill-tab.active {
+            border-color: rgba(53,231,255,.5);
+            background: linear-gradient(135deg, rgba(53,231,255,.16), rgba(100,244,172,.08));
+            transform: translateX(3px);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .service-card {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 16px;
+            background: rgba(255,255,255,.045);
+        }
+
+        .service-card strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 16px;
+        }
+
+        .chip {
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 999px;
+            padding: 5px 11px;
+            color: #dff8ff;
+            background: rgba(255,255,255,.055);
+            font-size: .86rem;
+            font-weight: 800;
+        }
+
+        .resume-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 0.78fr) minmax(320px, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .resume-preview {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.32);
+        }
+
+        .resume-preview img {
+            width: 100%;
+            display: block;
+            background: #fff;
+        }
+
+        .social-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .social-link {
+            display: grid;
+            grid-template-columns: 46px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.045);
+            transition: 180ms ease;
+        }
+
+        .social-link:hover {
+            border-color: rgba(53, 231, 255, 0.48);
+            background: rgba(53, 231, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .social-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            color: #021018;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            font-size: 1.35rem;
+        }
+
+        .social-link strong {
+            display: block;
+            color: var(--text);
+        }
+
+        .social-link span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .cloud-3d {
+            position: relative;
+            min-height: 340px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background:
+                linear-gradient(145deg, rgba(53,231,255,.1), transparent),
+                rgba(8, 14, 25, 0.86);
+            perspective: 900px;
+        }
+
+        .orbit {
+            position: absolute;
+            inset: 48px;
+            border: 1px dashed rgba(53,231,255,.28);
+            border-radius: 50%;
+            transform: rotateX(68deg) rotateZ(-18deg);
+            animation: rotateOrbit 16s linear infinite;
+        }
+
+        .orbit.two {
+            inset: 84px;
+            border-color: rgba(255,209,102,.28);
+            animation-duration: 11s;
+            animation-direction: reverse;
+        }
+
+        @keyframes rotateOrbit { to { transform: rotateX(68deg) rotateZ(342deg); } }
+
+        .cloud-core {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 154px;
+            height: 154px;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            color: #031018;
+            background: linear-gradient(135deg, var(--cyan), var(--green));
+            box-shadow: 0 0 70px rgba(53,231,255,.32);
+            transform: translate(-50%, -50%) rotateX(18deg) rotateY(-22deg);
+            font-size: 4rem;
+        }
+
+        .node {
+            position: absolute;
+            width: 74px;
+            height: 74px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 14px;
+            color: #fff;
+            background: rgba(255,255,255,.08);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 16px 44px rgba(0,0,0,.28);
+        }
+
+        .node:nth-child(4) { left: 10%; top: 16%; color: var(--gold); }
+        .node:nth-child(5) { right: 11%; top: 20%; color: var(--cyan); }
+        .node:nth-child(6) { left: 15%; bottom: 15%; color: var(--green); }
+        .node:nth-child(7) { right: 14%; bottom: 14%; color: var(--pink); }
+
+        .timeline {
+            display: grid;
+            gap: 16px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 0 7px rgba(53,231,255,.11);
+        }
+
+        .timeline-item strong { display: block; margin-bottom: 3px; }
+
+        .contact-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 18px;
+        }
+
+        form { display: grid; gap: 14px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        label { display: grid; gap: 7px; color: var(--muted); font-weight: 900; font-size: .9rem; }
+
+        input, textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            padding: 13px 14px;
+            color: var(--text);
+            outline: none;
+            background: rgba(3, 7, 12, 0.68);
+        }
+
+        textarea { min-height: 132px; resize: vertical; }
+        input:focus, textarea:focus { border-color: rgba(53,231,255,.68); box-shadow: 0 0 0 4px rgba(53,231,255,.09); }
+
+        .request-list {
+            display: grid;
+            gap: 10px;
+            max-height: 390px;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .request-item {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px;
+            background: rgba(255,255,255,.045);
+        }
+
+        .request-item strong { display: block; }
+        .request-item small { color: var(--gold); }
+        .request-item p { margin-top: 6px; font-size: .92rem; }
+
+        .empty {
+            color: var(--muted);
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+        }
+
+        footer {
+            padding: 28px 0 42px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: 600ms ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 940px) {
+            .hero,
+            .grid.two,
+            .grid.three,
+            .skill-layout,
+            .resume-layout,
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .hero { min-height: auto; padding-top: 48px; }
+            .profile-card { animation: none; }
+            .section-head { align-items: start; flex-direction: column; }
+            .nav-links { display: none; }
+        }
+
+        @media (max-width: 620px) {
+            .shell { width: min(100% - 22px, 1180px); }
+            h1 { font-size: 3rem; }
+            .form-grid, .service-grid { grid-template-columns: 1fr; }
+            .hero-actions .btn, .actions .btn { width: 100%; }
+            .stats { grid-template-columns: 1fr; }
+            .cloud-3d { min-height: 280px; }
+            .node { width: 58px; height: 58px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas" aria-hidden="true"></canvas>
+
+    <header>
+        <nav class="shell">
+            <a class="brand" href="#top">
+                <span class="brand-mark"><i class="fa-solid fa-cloud-bolt"></i></span>
+                <span>Sayyed Sahil</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#terminal">Terminal</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#resume">Resume</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="top">
+        <section class="hero shell">
+            <div>
+                <span class="eyebrow"><i class="fa-solid fa-satellite-dish"></i> Cloud Support Engineer Portfolio</span>
+                <h1>Sayyed Sahil <span class="glow-text">cloud, Linux and network support.</span></h1>
+                <p class="hero-copy">
+                    Motivated B.Sc IT student from Mumbai with hands-on practice in AWS, Linux administration,
+                    networking and DevOps-style deployments. I enjoy building clean infrastructure, solving
+                    support issues and learning by shipping practical labs.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn primary" href="#contact"><i class="fa-solid fa-paper-plane"></i> Send Request</a>
+                    <a class="btn" href="#skills"><i class="fa-solid fa-layer-group"></i> Explore Skills</a>
+                    <a class="btn" href="sahil-resume.jpeg" download><i class="fa-solid fa-download"></i> Download Resume</a>
+                    <a class="btn" href="mailto:shahansayyed456@gmail.com"><i class="fa-solid fa-envelope"></i> Email</a>
+                </div>
+            </div>
+
+            <aside class="profile-stage">
+                <div class="profile-card reveal">
+                    <div class="profile-inner">
+                        <div class="photo-frame">
+                            <img src="sahil-profile.jpeg" alt="Sayyed Sahil profile photo">
+                            <span class="scanline"></span>
+                        </div>
+                        <div class="profile-meta">
+                            <a class="meta-row" href="tel:+918108725776">
+                                <i class="fa-solid fa-phone"></i>
+                                <span>+91 8108725776</span>
+                            </a>
+                            <a class="meta-row" href="mailto:shahansayyed456@gmail.com">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span>shahansayyed456@gmail.com</span>
+                            </a>
+                            <div class="meta-row">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>Mumbai, India</span>
+                            </div>
+                        </div>
+                        <div class="stats">
+                            <div class="stat"><strong>Top 10</strong><span>In class</span></div>
+                            <div class="stat"><strong>B.Sc IT</strong><span>Mumbai University</span></div>
+                            <div class="stat"><strong>AWS</strong><span>Hands-on labs</span></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section shell" id="intro">
+            <div class="section-head">
+                <h2>Introduction</h2>
+                <p>A sharper professional intro for recruiters and cloud support hiring teams.</p>
+            </div>
+            <div class="grid two">
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-user-tie"></i> About Me</span>
+                    <h3>Cloud-focused IT student with support mindset</h3>
+                    <p>
+                        I am Sayyed Sahil, a B.Sc Information Technology student with knowledge of Cloud Computing,
+                        Linux and Networking. I have practiced AWS deployments, serverless functions, VPC setup,
+                        Linux services and network fundamentals through hands-on projects.
+                    </p>
+                </article>
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-graduation-cap"></i> Education</span>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <strong>B.Sc Information Technology</strong>
+                            <p>Mumbai University, Smt. K.G. Mittal College, Mumbai. Top 10 in class.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Class XII, Maharashtra Board</strong>
+                            <p>57.47% - 2022</p>
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Class X, Maharashtra Board</strong>
+                            <p>72% - 2020</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section shell" id="terminal">
+            <div class="section-head">
+                <h2>Live Terminal</h2>
+                <p>Terminal-style profile that shows your cloud stack like a real engineer dashboard.</p>
+            </div>
+            <div class="grid two">
+                <div class="terminal reveal">
+                    <div class="terminal-top">
+                        <div class="dots"><span></span><span></span><span></span></div>
+                        <span class="terminal-title">sahil@cloud-lab: ~/portfolio</span>
+                    </div>
+                    <div class="terminal-body" id="terminalBody"></div>
+                </div>
+                <div class="cloud-3d reveal" aria-label="3D cloud architecture visual">
+                    <div class="orbit"></div>
+                    <div class="orbit two"></div>
+                    <div class="cloud-core"><i class="fa-solid fa-cloud"></i></div>
+                    <div class="node"><i class="fa-brands fa-docker fa-2x"></i></div>
+                    <div class="node"><i class="fa-solid fa-database fa-2x"></i></div>
+                    <div class="node"><i class="fa-solid fa-network-wired fa-2x"></i></div>
+                    <div class="node"><i class="fa-solid fa-code fa-2x"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section shell" id="skills">
+            <div class="section-head">
+                <h2>Clickable Skill Console</h2>
+                <p>Click AWS, Linux, Networking or DevOps to see exactly what services and tasks are included.</p>
+            </div>
+            <div class="skill-layout">
+                <div class="panel reveal">
+                    <div class="skill-menu">
+                        <button class="skill-tab active" type="button" data-skill="aws"><i class="fa-brands fa-aws"></i> AWS Cloud</button>
+                        <button class="skill-tab" type="button" data-skill="linux"><i class="fa-brands fa-linux"></i> Linux Admin</button>
+                        <button class="skill-tab" type="button" data-skill="networking"><i class="fa-solid fa-network-wired"></i> Networking</button>
+                        <button class="skill-tab" type="button" data-skill="devops"><i class="fa-solid fa-gears"></i> DevOps Basics</button>
+                    </div>
+                </div>
+                <div class="panel reveal" id="skillPanel">
+                    <span class="kicker"><i class="fa-brands fa-aws"></i> AWS Cloud</span>
+                    <h3>AWS services practiced in labs</h3>
+                    <p>Container deployment, serverless basics, static hosting, VPC networking and monitoring fundamentals.</p>
+                    <div class="service-grid"></div>
+                    <div class="chips"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section shell" id="projects">
+            <div class="section-head">
+                <h2>Projects & Labs</h2>
+                <p>Resume projects rewritten as clear portfolio case studies.</p>
+            </div>
+            <div class="grid three">
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-brands fa-docker"></i> ECS + ECR</span>
+                    <h3>Docker to AWS Deployment</h3>
+                    <ul>
+                        <li>Containerized a Node.js app using Docker.</li>
+                        <li>Pushed image to AWS ECR.</li>
+                        <li>Deployed app using AWS ECS cluster.</li>
+                    </ul>
+                </article>
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-bolt"></i> Lambda</span>
+                    <h3>Serverless App Using AWS Lambda</h3>
+                    <ul>
+                        <li>Created serverless functions using AWS Lambda.</li>
+                        <li>Integrated Lambda with API Gateway.</li>
+                    </ul>
+                </article>
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-globe"></i> S3</span>
+                    <h3>Static Website Hosting</h3>
+                    <ul>
+                        <li>Hosted website on AWS S3.</li>
+                        <li>Practiced bucket hosting and deployment flow.</li>
+                    </ul>
+                </article>
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-route"></i> VPC</span>
+                    <h3>VPC Setup Project</h3>
+                    <ul>
+                        <li>Created custom VPC with subnets.</li>
+                        <li>Configured routing and Internet Gateway.</li>
+                    </ul>
+                </article>
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-server"></i> Linux</span>
+                    <h3>Linux Services Practice</h3>
+                    <ul>
+                        <li>Practiced SSH, FTP, NFS and Samba.</li>
+                        <li>Worked with Apache, MariaDB, LVM and disk management.</li>
+                    </ul>
+                </article>
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-trophy"></i> Achievement</span>
+                    <h3>Top 10 in Class</h3>
+                    <p>Strong academic performance with practical AWS, Linux and networking project work.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section shell" id="resume">
+            <div class="section-head">
+                <h2>Resume & Links</h2>
+                <p>Visitors can view your resume, download it, and open your social profiles from one place.</p>
+            </div>
+            <div class="resume-layout">
+                <article class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-file-lines"></i> Resume</span>
+                    <h3>Sayyed Sahil - Cloud Support Engineer</h3>
+                    <p>
+                        Resume includes professional summary, B.Sc IT education, AWS projects, Linux administration,
+                        networking skills, achievement and language details.
+                    </p>
+                    <div class="actions" style="margin-top: 18px;">
+                        <a class="btn primary" href="sahil-resume.jpeg" download><i class="fa-solid fa-download"></i> Download Resume</a>
+                        <a class="btn" href="sahil-resume.jpeg" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Open Full Resume</a>
+                    </div>
+
+                    <div class="social-grid" aria-label="Social profile links">
+                        <a class="social-link" href="https://github.com/shahansayyed456-rgb/shahansayyed456-rgb" target="_blank" rel="noopener">
+                            <span class="social-icon"><i class="fa-brands fa-github"></i></span>
+                            <span><strong>GitHub</strong><span>shahansayyed456-rgb</span></span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <a class="social-link" href="https://www.instagram.com/_shahan._102/" target="_blank" rel="noopener">
+                            <span class="social-icon"><i class="fa-brands fa-instagram"></i></span>
+                            <span><strong>Instagram</strong><span>_shahan._102</span></span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <a class="social-link" href="https://www.linkedin.com/in/your-username/" target="_blank" rel="noopener">
+                            <span class="social-icon"><i class="fa-brands fa-linkedin-in"></i></span>
+                            <span><strong>LinkedIn</strong><span>Add your LinkedIn profile link</span></span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <a class="social-link" href="mailto:shahansayyed456@gmail.com">
+                            <span class="social-icon"><i class="fa-solid fa-envelope"></i></span>
+                            <span><strong>Email</strong><span>shahansayyed456@gmail.com</span></span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <a class="social-link" href="https://wa.me/918108725776" target="_blank" rel="noopener">
+                            <span class="social-icon"><i class="fa-brands fa-whatsapp"></i></span>
+                            <span><strong>WhatsApp</strong><span>Direct message on WhatsApp</span></span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <aside class="resume-preview reveal">
+                    <img src="sahil-resume.jpeg" alt="Sayyed Sahil resume preview">
+                </aside>
+            </div>
+        </section>
+
+        <section class="section shell" id="contact">
+            <div class="section-head">
+                <h2>Contact Request System</h2>
+                <p>Visitor details will be saved in this browser request panel and can open directly in Email or WhatsApp.</p>
+            </div>
+            <div class="contact-layout">
+                <div class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-inbox"></i> Send Message</span>
+                    <form id="contactForm">
+                        <div class="form-grid">
+                            <label>
+                                Name
+                                <input id="visitorName" type="text" placeholder="Enter your name" required>
+                            </label>
+                            <label>
+                                Email
+                                <input id="visitorEmail" type="email" placeholder="Enter your email" required>
+                            </label>
+                        </div>
+                        <label>
+                            Message
+                            <textarea id="visitorMessage" placeholder="Write your message for Sahil" required></textarea>
+                        </label>
+                        <div class="actions">
+                            <button class="btn primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Save & Email</button>
+                            <button class="btn" type="button" id="whatsappBtn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                            <button class="btn" type="button" id="clearRequests"><i class="fa-solid fa-trash"></i> Clear Requests</button>
+                        </div>
+                    </form>
+                </div>
+                <aside class="panel reveal">
+                    <span class="kicker"><i class="fa-solid fa-bell"></i> Requests Received</span>
+                    <div class="request-list" id="requestList"></div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <footer class="shell">
+        <p>Sayyed Sahil - Cloud Support Engineer | English | Mumbai, India</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById("matrixCanvas");
+        const ctx = canvas.getContext("2d");
+        let points = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            points = Array.from({ length: Math.min(90, Math.floor(window.innerWidth / 18)) }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.45,
+                vy: (Math.random() - 0.5) * 0.45
+            }));
+        }
+
+        function drawNetwork() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            points.forEach((p) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(53, 231, 255, 0.48)";
+                ctx.fill();
+            });
+
+            for (let i = 0; i < points.length; i++) {
+                for (let j = i + 1; j < points.length; j++) {
+                    const a = points[i];
+                    const b = points[j];
+                    const distance = Math.hypot(a.x - b.x, a.y - b.y);
+                    if (distance < 135) {
+                        ctx.strokeStyle = `rgba(100, 244, 172, ${0.16 - distance / 900})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(drawNetwork);
+        }
+
+        resizeCanvas();
+        drawNetwork();
+        window.addEventListener("resize", resizeCanvas);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add("visible");
+            });
+        }, { threshold: 0.14 });
+        document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+
+        const terminalLines = [
+            ["prompt", "sahil@cloud-lab:~$ "], ["cmd", "whoami"], ["comment", "\nSayyed Sahil - Cloud Support Engineer\n\n"],
+            ["prompt", "sahil@cloud-lab:~$ "], ["cmd", "cat skills.txt"], ["comment", "\nAWS: ECS, ECR, Lambda, RDS, ELB, VPC, Route 53, CloudWatch, S3\nLinux: SSH, FTP, NFS, Samba, Apache, MariaDB, Shell Scripting, LVM\nNetworking: Routing, Switching, VLAN, DHCP, Subnetting\n\n"],
+            ["prompt", "sahil@cloud-lab:~$ "], ["cmd", "deploy --portfolio --status"], ["comment", "\nProfile online. Open for cloud support and junior DevOps roles.\n"]
+        ];
+
+        const terminalBody = document.getElementById("terminalBody");
+        let lineIndex = 0;
+        let charIndex = 0;
+
+        function typeTerminal() {
+            if (lineIndex >= terminalLines.length) {
+                terminalBody.innerHTML += '<span class="cursor"></span>';
+                return;
+            }
+            const [className, text] = terminalLines[lineIndex];
+            if (charIndex === 0) terminalBody.innerHTML += `<span class="${className}">`;
+            terminalBody.lastElementChild.textContent += text[charIndex] || "";
+            charIndex++;
+            if (charIndex >= text.length) {
+                terminalBody.innerHTML += "</span>";
+                lineIndex++;
+                charIndex = 0;
+            }
+            setTimeout(typeTerminal, className === "comment" ? 9 : 34);
+        }
+        typeTerminal();
+
+        const skillData = {
+            aws: {
+                icon: "fa-brands fa-aws",
+                title: "AWS Cloud",
+                heading: "AWS services practiced in labs",
+                summary: "Container deployment, serverless basics, static hosting, VPC networking and monitoring fundamentals.",
+                services: [
+                    ["ECS", "Deployed containerized application using an ECS cluster."],
+                    ["ECR", "Pushed Docker image to AWS Elastic Container Registry."],
+                    ["Lambda", "Created serverless functions and connected them with API Gateway."],
+                    ["S3", "Hosted a static website using S3 bucket hosting."],
+                    ["VPC", "Created custom VPC, subnets, route table and Internet Gateway."],
+                    ["CloudWatch", "Understands logs, metrics and basic service monitoring."]
+                ],
+                chips: ["RDS", "ELB", "Route 53", "Security Groups", "Subnets", "API Gateway"]
+            },
+            linux: {
+                icon: "fa-brands fa-linux",
+                title: "Linux Administration",
+                heading: "Linux services and server operations",
+                summary: "Hands-on Linux administration practice for common support tasks and service setup.",
+                services: [
+                    ["SSH", "Secure remote access and basic server administration."],
+                    ["Apache", "Installed and configured web server services."],
+                    ["MariaDB", "Practiced database service setup basics."],
+                    ["NFS", "Worked with Linux network file sharing concepts."],
+                    ["Samba", "Practiced cross-platform file sharing concepts."],
+                    ["LVM", "Understands logical volume and disk management basics."]
+                ],
+                chips: ["FTP", "Shell Scripting", "File Systems", "User Management", "Disk Management"]
+            },
+            networking: {
+                icon: "fa-solid fa-network-wired",
+                title: "Networking",
+                heading: "Network fundamentals and troubleshooting",
+                summary: "Core networking concepts useful for cloud support and infrastructure troubleshooting.",
+                services: [
+                    ["Routing", "Understands packet forwarding and route path basics."],
+                    ["Switching", "Practiced LAN switching concepts."],
+                    ["VLAN", "Network segmentation and isolated broadcast domains."],
+                    ["DHCP", "Automatic IP allocation and client network setup."],
+                    ["Subnetting", "IP planning and subnet calculation practice."],
+                    ["Internet Gateway", "Connected AWS VPC resources with internet access flow."]
+                ],
+                chips: ["DNS", "VPN", "Security Groups", "Troubleshooting", "Connectivity"]
+            },
+            devops: {
+                icon: "fa-solid fa-gears",
+                title: "DevOps Basics",
+                heading: "Deployment mindset and automation basics",
+                summary: "Beginner DevOps workflow with Docker, cloud deployment and scripts.",
+                services: [
+                    ["Docker", "Containerized Node.js app for AWS deployment."],
+                    ["Deployment", "Moved app image from local Docker to AWS services."],
+                    ["Shell", "Uses shell scripts for repeatable Linux tasks."],
+                    ["Monitoring", "Knows basic status, logs and health-check thinking."]
+                ],
+                chips: ["Node.js App", "Containers", "Cloud Lab", "Support Workflow"]
+            }
+        };
+
+        const skillPanel = document.getElementById("skillPanel");
+        function renderSkill(key) {
+            const data = skillData[key];
+            skillPanel.innerHTML = `
+                <span class="kicker"><i class="${data.icon}"></i> ${data.title}</span>
+                <h3>${data.heading}</h3>
+                <p>${data.summary}</p>
+                <div class="service-grid">
+                    ${data.services.map(([name, detail]) => `<div class="service-card"><strong>${name}</strong><p>${detail}</p></div>`).join("")}
+                </div>
+                <div class="chips">${data.chips.map((chip) => `<span class="chip">${chip}</span>`).join("")}</div>
+            `;
+        }
+
+        document.querySelectorAll(".skill-tab").forEach((button) => {
+            button.addEventListener("click", () => {
+                document.querySelectorAll(".skill-tab").forEach((item) => item.classList.remove("active"));
+                button.classList.add("active");
+                renderSkill(button.dataset.skill);
+            });
+        });
+        renderSkill("aws");
+
+        const requestList = document.getElementById("requestList");
+        const storageKey = "sahilPortfolioRequests";
+
+        function getRequests() {
+            return JSON.parse(localStorage.getItem(storageKey) || "[]");
+        }
+
+        function saveRequests(requests) {
+            localStorage.setItem(storageKey, JSON.stringify(requests));
+        }
+
+        function renderRequests() {
+            const requests = getRequests();
+            if (!requests.length) {
+                requestList.innerHTML = '<div class="empty">No requests yet. Submit the form to test it.</div>';
+                return;
+            }
+            requestList.innerHTML = requests.map((request) => `
+                <div class="request-item">
+                    <strong>${request.name}</strong>
+                    <small>${request.email} | ${request.time}</small>
+                    <p>${request.message}</p>
+                </div>
+            `).join("");
+        }
+
+        function readForm() {
+            return {
+                name: document.getElementById("visitorName").value.trim(),
+                email: document.getElementById("visitorEmail").value.trim(),
+                message: document.getElementById("visitorMessage").value.trim()
+            };
+        }
+
+        document.getElementById("contactForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            if (!event.target.reportValidity()) return;
+            const form = readForm();
+            const requests = getRequests();
+            const saved = { ...form, time: new Date().toLocaleString() };
+            requests.unshift(saved);
+            saveRequests(requests.slice(0, 20));
+            renderRequests();
+
+            const subject = encodeURIComponent(`Portfolio request from ${form.name}`);
+            const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`);
+            window.location.href = `mailto:shahansayyed456@gmail.com?subject=${subject}&body=${body}`;
+        });
+
+        document.getElementById("whatsappBtn").addEventListener("click", () => {
+            const form = readForm();
+            const text = encodeURIComponent(`Hi Sahil, I saw your portfolio.\n\nName: ${form.name || "Visitor"}\nEmail: ${form.email || "Not provided"}\nMessage: ${form.message || "I want to connect with you."}`);
+            window.open(`https://wa.me/918108725776?text=${text}`, "_blank", "noopener");
+        });
+
+        document.getElementById("clearRequests").addEventListener("click", () => {
+            saveRequests([]);
+            renderRequests();
+        });
+
+        renderRequests();
+    </script>
+</body>
+</html>
